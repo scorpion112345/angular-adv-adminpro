@@ -11,3 +11,9 @@
 .cursor {
   cursor: pointer;
 }
+
+.img-avatar {
+  margin-bottom: 1rem;
+  width: 200px;
+  height: 200px;
+}
