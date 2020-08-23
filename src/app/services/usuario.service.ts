@@ -8,6 +8,7 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 declare const gapi: any;
 const base_url = environment.base_url;
@@ -30,6 +31,13 @@ export class UsuarioService {
     return localStorage.getItem('token') || '';
   }
 
+  get herders() {
+    return {
+      headers: {
+        'x-token': this.token,
+      },
+    };
+  }
   async googleInit() {
     return new Promise((resolve) => {
       gapi.load('auth2', () => {
@@ -74,11 +82,11 @@ export class UsuarioService {
       ...data,
       role: this.usuario.role,
     };
-    return this.http.put(`${base_url}/usuarios/${this.usuario.uid}`, data, {
-      headers: {
-        'x-token': this.token,
-      },
-    });
+    return this.http.put(
+      `${base_url}/usuarios/${this.usuario.uid}`,
+      data,
+      this.herders
+    );
   }
 
   login(formData: LoginForm) {
@@ -104,5 +112,32 @@ export class UsuarioService {
         this.router.navigateByUrl('/login');
       });
     });
+  }
+
+  cargarUsuarios(page: number = 1) {
+    return this.http
+      .get<CargarUsuario>(`${base_url}/usuarios?page=${page}`, this.herders)
+      .pipe(
+        map((res) => {
+          const usuarios = res.usuarios.map((user) => {
+            const { email, google, img, nombre, role, uid } = user;
+            return new Usuario(nombre, email, '', img, google, role, uid);
+          });
+          res.usuarios = usuarios;
+          return res;
+        })
+      );
+  }
+
+  elimiarUsuario(uid: string) {
+    return this.http.delete(`${base_url}/usuarios/${uid}`, this.herders);
+  }
+
+  guardarUsuario(usuario: Usuario) {
+    return this.http.put(
+      `${base_url}/usuarios/${usuario.uid}`,
+      usuario,
+      this.herders
+    );
   }
 }
