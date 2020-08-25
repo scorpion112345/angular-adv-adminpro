@@ -45,7 +45,7 @@
                 <td>Luna</td>
                 <td>Luna</td>
 
-                <td class="text-nowrap">
+                <td class="text-nowrap text-center">
                   <a
                     href="#"
                     data-toggle="tooltip"

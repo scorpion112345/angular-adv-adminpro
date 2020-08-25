@@ -71,10 +71,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       this.usuarios = this.usuariosTemp;
       return;
     }
-    this.busquedasService.buscar('usuarios', termino).subscribe((resp) => {
-      this.usuarios = resp;
-      console.log(resp);
-    });
+    this.busquedasService
+      .buscar('usuarios', termino)
+      .subscribe((resp: Usuario[]) => {
+        this.usuarios = resp;
+        console.log(resp);
+      });
   }
 
   cambiarRole(usuario: Usuario) {
