@@ -33,6 +33,10 @@ export class BusquedasService {
     });
   }
 
+  busquedaGlobal(termino: string) {
+    return this.http.get<any[]>(`${base_url}/todo/${termino}`, this.herders);
+  }
+
   buscar(tipo: 'usuarios' | 'medicos' | 'hospitales', termino: string) {
     return this.http
       .get<any[]>(`${base_url}/todo/coleccion/${tipo}/${termino}`, this.herders)
